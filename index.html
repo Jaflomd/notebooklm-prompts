@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 Prompts para NotebookLM | El Médico Potenciado</title>
+    <meta name="description" content="6 prompts avanzados para NotebookLM que transforman cualquier corpus en conocimiento estructurado. El Médico Potenciado — Skool Community.">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #161616;
+            --text: #f0ebe4;
+            --text-dim: rgba(240,235,228,0.55);
+            --text-muted: rgba(240,235,228,0.3);
+            --gold: #d4a574;
+            --gold-dim: rgba(212,165,116,0.12);
+            --gold-glow: rgba(212,165,116,0.06);
+            --warm: #e87832;
+            --rose: #c83c5a;
+            --teal: #5ec4b6;
+            --purple: #a89cd8;
+            --green: #7cc88e;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            text-align: center;
+            padding: 80px 24px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 24px;
+            background: var(--gold-dim);
+            border: 1px solid rgba(212,165,116,0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--gold);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gold-dim);
+            border: 1px solid rgba(212,165,116,0.2);
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            max-width: 620px;
+            margin: 0 auto 12px;
+            font-weight: 300;
+        }
+
+        .hero-instructions {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 28px;
+            font-style: italic;
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-meta .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.5;
+        }
+
+        /* ── GRID ── */
+        .grid-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .prompt-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .prompt-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── CARD ── */
+        .prompt-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(240,235,228,0.06);
+            border-radius: var(--radius);
+            padding: 28px 24px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .prompt-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .prompt-card:hover {
+            border-color: rgba(212,165,116,0.15);
+            background: var(--bg-card-hover);
+        }
+
+        .card-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--gold);
+            opacity: 0.08;
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .card-category {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+        }
+
+        .cat-lenguaje { background: rgba(94,196,182,0.12); color: var(--teal); border: 1px solid rgba(94,196,182,0.2); }
+        .cat-pareto { background: rgba(232,120,50,0.12); color: var(--warm); border: 1px solid rgba(232,120,50,0.2); }
+        .cat-preguntas { background: rgba(200,60,90,0.12); color: var(--rose); border: 1px solid rgba(200,60,90,0.2); }
+        .cat-auditoria { background: rgba(140,120,200,0.12); color: var(--purple); border: 1px solid rgba(140,120,200,0.2); }
+        .cat-modelos { background: rgba(212,165,116,0.12); color: var(--gold); border: 1px solid rgba(212,165,116,0.2); }
+        .cat-competencias { background: rgba(100,180,120,0.12); color: var(--green); border: 1px solid rgba(100,180,120,0.2); }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            line-height: 1.25;
+        }
+
+        .card-desc {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        .card-output {
+            margin-bottom: 16px;
+        }
+
+        .card-output-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .output-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .output-list li {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            padding: 2px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .output-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.3;
+        }
+
+        /* ── EXPANDABLE PROMPT ── */
+        .prompt-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .prompt-content.open {
+            opacity: 1;
+            max-height: 4000px;
+        }
+
+        .prompt-inner {
+            padding: 16px 0 12px;
+            border-top: 1px solid rgba(240,235,228,0.06);
+        }
+
+        .prompt-text-block {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(240,235,228,0.08);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .prompt-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            line-height: 1.7;
+            color: var(--text-dim);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .prompt-text::-webkit-scrollbar { width: 4px; }
+        .prompt-text::-webkit-scrollbar-track { background: transparent; }
+        .prompt-text::-webkit-scrollbar-thumb { background: rgba(240,235,228,0.1); border-radius: 2px; }
+
+        /* ── BUTTONS ── */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .btn-show,
+        .btn-copy {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-show {
+            background: transparent;
+            border: 1px solid rgba(240,235,228,0.12);
+            color: var(--text-dim);
+        }
+
+        .btn-show:hover {
+            border-color: rgba(240,235,228,0.25);
+            color: var(--text);
+        }
+
+        .btn-show.active {
+            border-color: rgba(212,165,116,0.3);
+            color: var(--gold);
+        }
+
+        .btn-copy {
+            background: var(--gold-dim);
+            border: 1px solid rgba(212,165,116,0.25);
+            color: var(--gold);
+        }
+
+        .btn-copy:hover {
+            background: rgba(212,165,116,0.18);
+            border-color: rgba(212,165,116,0.4);
+        }
+
+        .btn-copy.copied {
+            background: rgba(94,196,182,0.15);
+            border-color: rgba(94,196,182,0.3);
+            color: var(--teal);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid rgba(94,196,182,0.3);
+            color: var(--teal);
+            padding: 12px 28px;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(12px);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            text-align: center;
+            padding: 60px 24px 80px;
+            border-top: 1px solid rgba(240,235,228,0.06);
+        }
+
+        .footer h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            max-width: 480px;
+            margin: 0 auto 28px;
+            line-height: 1.6;
+        }
+
+        .footer-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--gold), #c4955a);
+            color: var(--bg);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .footer-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212,165,116,0.25);
+        }
+
+        .footer-sub {
+            margin-top: 20px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-icon,
+        .hero-badge,
+        .hero h1,
+        .hero-subtitle,
+        .hero-instructions,
+        .hero-meta {
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .hero-icon { animation-delay: 0.05s; }
+        .hero-badge { animation-delay: 0.1s; }
+        .hero h1 { animation-delay: 0.15s; }
+        .hero-subtitle { animation-delay: 0.25s; }
+        .hero-instructions { animation-delay: 0.3s; }
+        .hero-meta { animation-delay: 0.35s; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(240,235,228,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(240,235,228,0.2); }
+        ::selection { background: rgba(212,165,116,0.3); color: var(--text); }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 20 C4 20 4 12 12 12 C20 12 20 4 20 4" stroke="var(--gold)" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+            <path d="M4 14.5 C4 14.5 4 9.5 9.5 9.5 C15 9.5 15 4 15 4" stroke="var(--gold)" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+            <path d="M4 9.5 C4 9.5 4 7 7 7 C10 7 10 4 10 4" stroke="var(--gold)" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+        </svg>
+    </div>
+    <div class="hero-badge">NotebookLM Prompts</div>
+    <h1>6 Prompts para<br><span>NotebookLM</span></h1>
+    <p class="hero-subtitle">Transforma cualquier corpus de documentos en conocimiento estructurado. Cada prompt extrae una dimensión diferente de comprension.</p>
+    <p class="hero-instructions">Sube tus documentos a NotebookLM, pega el prompt en el chat, y deja que trabaje.</p>
+    <div class="hero-meta">
+        <span>Dr. Javier Flores-Cohaila</span>
+        <span class="dot"></span>
+        <span>@jaflomd</span>
+        <span class="dot"></span>
+        <span>El Medico Potenciado</span>
+    </div>
+</section>
+
+<!-- GRID -->
+<div class="grid-container">
+    <div class="prompt-grid" id="promptGrid">
+
+        <!-- 01 -->
+        <div class="prompt-card">
+            <span class="card-number">01</span>
+            <span class="card-category cat-lenguaje">Lenguaje</span>
+            <h3 class="card-title">Field Language Guide</h3>
+            <p class="card-desc">Un linguista xenocultural te ensena el idioma de un campo de conocimiento usando SOLO tus documentos como planeta de referencia. 4 niveles progresivos: de alien a nativo.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>Vocabulario esencial + falsos amigos</li>
+                    <li>Collocations y gramatica del campo</li>
+                    <li>Jerga insider y debates activos</li>
+                    <li>Shibboleths y modelos mentales implicitos</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-01">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-01">Eres un lingüista xenocultural. Imagina que soy un alien que acaba de aterrizar en el planeta de este campo de conocimiento. No hablo el idioma. Tu misión: enseñarme el idioma de este campo usando SOLO los documentos cargados como tu planeta de referencia.
+
+Genera un REPORTE titulado "Guía de Idioma: [nombre del campo]" con 4 niveles progresivos (cada nivel asume dominio del anterior):
+
+## NIVEL 1 — SUPERVIVENCIA (el alien acaba de llegar)
+- **Vocabulario esencial**: 15-20 términos que aparecen en TODAS partes. Definición en lenguaje llano + ejemplo de uso natural extraído de los documentos.
+- **Falsos amigos**: términos que parecen significar lo que significan en lenguaje común pero aquí significan otra cosa.
+- **Frases de supervivencia**: 5-7 expresiones fijas que se repiten y sin las cuales no entiendes nada.
+
+## NIVEL 2 — CONVERSACIONAL (el alien ya puede seguir una conversación básica)
+- **Vocabulario intermedio**: 20-25 términos que separan al turista del residente. Definición + relación con términos de Nivel 1.
+- **Collocations**: combinaciones de palabras que siempre van juntas (ej: "clinical significance" no "clinical importance").
+- **Gramática del campo**: patrones de razonamiento típicos. Cómo se construyen los argumentos aquí. Qué lógica siguen.
+
+## NIVEL 3 — PROFESIONAL (el alien ya trabaja aquí)
+- **Vocabulario técnico avanzado**: 15-20 términos que solo usa alguien que trabaja activamente en el campo. Incluye acrónimos y su uso correcto.
+- **Jerga insider**: expresiones informales, abreviaturas, y shorthand que usan los profesionales entre sí pero que no aparecen en definiciones formales.
+- **Debates activos**: 3-5 controversias o tensiones conceptuales vivas en los documentos. Presenta ambos lados sin resolver.
+
+## NIVEL 4 — NATIVO/EXPERTO (el alien ya es indistinguible de un local)
+- **Shibboleths**: 5-7 señales lingüísticas que delatan instantáneamente si alguien es realmente experto o solo finge serlo.
+- **Modelos mentales implícitos**: frameworks de pensamiento que los expertos usan automáticamente pero rara vez explicitan.
+- **Arqueología del campo**: términos obsoletos, evolución semántica, y por qué ciertas palabras cambiaron de significado.
+
+REGLAS:
+- Extrae TODO de los documentos cargados. No inventes ni uses conocimiento externo.
+- Cada término incluye: término → definición contextual → ejemplo de uso real de los documentos.
+- Si un término aparece con significados diferentes en distintos documentos, señálalo explícitamente.
+- Marca con ⚠️ los términos que son falsos amigos respecto al lenguaje cotidiano.
+- Marca con 🔗 los términos que conectan con otros del mismo nivel o niveles anteriores.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('01')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('01')">Copiar prompt</button>
+            </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="prompt-card">
+            <span class="card-number">02</span>
+            <span class="card-category cat-pareto">Pareto</span>
+            <h3 class="card-title">Practicas Pareto del Experto</h3>
+            <p class="card-desc">Identifica el 20% de practicas que producen el 80% de resultados. No teoria — como se comporta un experto en la practica real, extraido directamente de tus documentos.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>Decisiones clave (que eligen hacer)</li>
+                    <li>Skills de ejecucion (como lo hacen)</li>
+                    <li>Workflows (en que orden)</li>
+                    <li>Meta-practicas (como afinan su practica)</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-02">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-02">Eres un analista de expertise aplicada. Tu misión: analizar los documentos cargados e identificar el 20% de prácticas que producen el 80% de los resultados en este campo. No me enseñes teoría — muéstrame cómo se comporta un experto en la práctica real.
+
+Genera un REPORTE titulado "Pareto del Experto: [nombre del campo]" organizado en 4 capas de práctica. Para cada capa, extrae SOLO las prácticas de alto apalancamiento que emerjan de los documentos.
+
+---
+
+## CAPA 1 — DECISIONES (qué eligen hacer los expertos)
+5-7 decisiones clave que un experto toma diferente a un novato.
+Estas son las bifurcaciones donde el experto gira a la derecha y el novato sigue de frente.
+
+## CAPA 2 — EJECUCIÓN (cómo lo hacen)
+5-7 skills de ejecución que separan al experto del competente.
+No es QUÉ hacen (eso está en Capa 1) — es el CÓMO: la técnica, el timing, la precisión, los micro-ajustes.
+
+## CAPA 3 — WORKFLOWS (en qué orden y con qué ritmo)
+3-5 secuencias de trabajo que los expertos siguen consistentemente.
+El orden importa. Los expertos no hacen cosas diferentes — las hacen en diferente secuencia y saben cuándo saltar pasos.
+
+## CAPA 4 — META-PRÁCTICAS (cómo afinan su propia práctica)
+2-3 prácticas reflexivas que los expertos usan para seguir mejorando.
+Esto es lo que hace que un experto siga siendo experto: cómo monitorean su propio rendimiento, detectan errores, y actualizan sus modelos.
+
+---
+
+PARA CADA PRÁCTICA, incluye EXACTAMENTE estos campos:
+
+🏷️ **Nombre**: nombre corto y accionable.
+📝 **Qué es**: descripción en 1-2 oraciones.
+🎯 **Por qué es Pareto**: qué resultado desproporcionado produce respecto al esfuerzo invertido.
+🔬 **Cómo se ve en la práctica**: descripción concreta, observable. Si filmara a un experto haciendo esto, ¿qué vería? Usa ejemplos de los documentos.
+📋 **Así se hace**: pasos prescriptivos para alguien que quiere incorporar esta práctica. Máximo 5 pasos, cada uno ejecutable.
+⚡ **Error Pareto inverso**: qué hacen los novatos en su lugar que produce máximo esfuerzo con mínimo resultado (el anti-patrón).
+
+---
+
+REGLAS:
+- Extrae TODO de los documentos cargados. No inventes ni uses conocimiento externo.
+- PRIORIZA prácticas que aparezcan repetidamente en los documentos o que los autores enfaticen como críticas.
+- Si una práctica es implícita (los autores la demuestran pero nunca la nombran), dale nombre y marca con 🔍.
+- Si dos prácticas de capas diferentes se potencian mutuamente, conéctalas con 🔗 y explica la sinergia.
+- Cada "Así se hace" debe ser ejecutable por alguien que ya leyó los documentos pero nunca ha practicado.
+- Cierra el reporte con "LA REGLA DE ORO": la ÚNICA práctica que, si solo pudieras elegir una, produce el mayor impacto en este campo. Justifica con evidencia de los documentos.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('02')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('02')">Copiar prompt</button>
+            </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="prompt-card">
+            <span class="card-number">03</span>
+            <span class="card-category cat-preguntas">Preguntas</span>
+            <h3 class="card-title">Preguntas Core del Campo</h3>
+            <p class="card-desc">Un filosofo socratico formula las preguntas que alguien deberia poder responder si realmente COMPRENDIO el campo — no memorizo. Incluye criterios novato vs experto.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>10 preguntas existenciales del campo</li>
+                    <li>20-40 preguntas de expansion</li>
+                    <li>Criterio novato vs experto por pregunta</li>
+                    <li>Secuencia logica de comprension</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-03">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-03">Eres un filósofo socrático del conocimiento aplicado. Tu misión: analizar los documentos cargados y formular las PREGUNTAS que alguien debería poder responder si realmente comprendió este campo — no memorizó, COMPRENDIÓ.
+
+Genera un REPORTE titulado "Preguntas Core: [nombre del campo]" en dos secciones.
+
+---
+
+## SECCIÓN 1 — LAS 10 PREGUNTAS EXISTENCIALES
+
+Estas son las 10 preguntas que definen si alguien entiende este campo o solo pasó por él. Si no puedes responder estas, no comprendiste el campo. Son las preguntas que un maestro le haría a un estudiante para saber si "lo tiene" o solo repite.
+
+Criterios para seleccionar estas 10:
+- Tocan los FUNDAMENTOS del campo, no los detalles.
+- No se responden con una definición — requieren razonamiento.
+- Un experto y un novato darían respuestas cualitativamente diferentes.
+- Son preguntas que el campo mismo se hace, no preguntas sobre el campo.
+
+Para cada pregunta incluye:
+
+❓ **Pregunta**: formulada de forma abierta, reflexiva, sin respuesta binaria posible.
+🎯 **Por qué importa**: qué concepto, tensión, o principio fundamental testea esta pregunta.
+👁️ **Respuesta novata vs experta**: SIN dar la respuesta correcta — describe QUÉ REVELARÍA una respuesta superficial (señales de memorización, simplificación excesiva, falsos binarios) vs qué revelaría una respuesta profunda (matices, conexiones, conciencia de límites). Esto es el CRITERIO para evaluar la profundidad de quien responde.
+
+---
+
+## SECCIÓN 2 — 20-40 PREGUNTAS DE EXPANSIÓN
+
+Estas preguntas asumen que ya puedes responder las 10 core. Son ramificaciones, aplicaciones, edge cases, y transferencias que llevan la comprensión del campo a territorios nuevos.
+
+Organízalas en subcategorías emergentes de los documentos (no las pongas en lista plana — agrúpalas por tema, tensión, o dominio de aplicación).
+
+Para cada pregunta incluye:
+
+❓ **Pregunta**: abierta y reflexiva.
+🔗 **Conecta con Core #N**: indica cuál de las 10 preguntas existenciales expande o complejiza.
+👁️ **Respuesta novata vs experta**: mismo formato que Sección 1.
+
+---
+
+REGLAS:
+- Extrae TODO de los documentos cargados. No inventes ni uses conocimiento externo.
+- Las preguntas deben ser RESPONDIBLES con los documentos — no preguntes cosas que el corpus no cubre.
+- NUNCA incluyas la respuesta. El valor está en la pregunta y en el criterio de evaluación.
+- Si los documentos contienen debates o contradicciones, convierte esas tensiones en preguntas.
+- Las 10 core deben tener una SECUENCIA lógica: la pregunta 1 es la más fundamental, la 10 la más integradora. Alguien podría recorrerlas en orden como un camino de comprensión.
+- Prioriza preguntas de "por qué" y "cómo" sobre preguntas de "qué".
+- Si una pregunta podría responderse con un copy-paste del documento, DESCÁRTALA — no testea comprensión, testea búsqueda.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('03')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('03')">Copiar prompt</button>
+            </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="prompt-card">
+            <span class="card-number">04</span>
+            <span class="card-category cat-auditoria">Auditoria</span>
+            <h3 class="card-title">Auditoria de Overclaims</h3>
+            <p class="card-desc">Un fiscal epistemico detecta TODO lo que el corpus afirma mas alla de lo que su evidencia permite. 4 capas de gravedad: desde overclaims explicitos hasta dogmas heredados.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>Overclaims explicitos y sutiles</li>
+                    <li>Silencios sospechosos</li>
+                    <li>Dogmas heredados sin cuestionar</li>
+                    <li>Indice de Confianza Epistemica global</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-04">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-04">Eres un fiscal epistémico. Analiza los documentos cargados y detecta TODO lo que el corpus afirma más allá de lo que su evidencia permite. Todo claim es culpable hasta que demuestre inocencia.
+
+Genera un REPORTE titulado "Auditoría Epistémica: [nombre del campo]" en 4 capas de gravedad creciente.
+
+## CAPA 1 — OVERCLAIMS EXPLÍCITOS (el texto dice lo que la evidencia no soporta)
+Busca: causalidad desde diseños no causales, generalizaciones desde muestras específicas, claims sin grupo control/efecto tamaño/replicación, claims de novedad sin antecedentes, cifras sin contexto.
+
+## CAPA 2 — OVERCLAIMS SUTILES (el lenguaje infla la evidencia)
+Busca: certeza retórica ("demuestra"/"confirma" para hallazgos tentativos), causalidad implícita por estructura gramatical, conectores inflados ("por lo tanto" sin lógica deductiva), hedging selectivo (caveats en unos claims pero no en otros igual de inciertos), cuantificación vaga ("significativamente" sin números).
+
+## CAPA 3 — SILENCIOS SOSPECHOSOS (lo que NO dice pero debería)
+Busca: limitaciones omitidas, poblaciones excluidas/nunca estudiadas, explicaciones alternativas ignoradas, beneficios sin costos/trade-offs, claims de corto plazo presentados como permanentes.
+
+## CAPA 4 — DOGMAS HEREDADOS (lo que el campo repite sin cuestionar)
+Busca: axiomas no examinados, consenso usado como evidencia, frameworks obsoletos mantenidos por inercia, definiciones circulares, teorías citadas por frecuencia no por calidad (efecto Matthew).
+
+---
+
+PARA CADA OVERCLAIM:
+
+🚩 **Claim**: la afirmación del corpus.
+🔍 **Tipo**: clasificación específica (ej: "causalidad sin diseño causal", "población fantasma").
+⚖️ **Evidencia presentada vs necesaria**: qué ofrece el corpus vs qué se necesitaría.
+🔄 **Reformulación honesta**: cómo debería haberse dicho.
+💀 **Riesgo**: qué pasa si alguien cree esto sin cuestionar.
+
+---
+
+REGLAS:
+- Analiza SOLO los documentos cargados. Señala problemas INTERNOS, no traigas evidencia externa.
+- Sé ESPECÍFICO: CUÁL claim, DÓNDE, POR QUÉ no se sostiene.
+- Si un claim sobrevive el escrutinio, NO lo incluyas.
+- Si el mismo overclaim aparece en múltiples documentos, marca con 🔁 (patrón del campo, no del autor).
+- Capa 4: busca lo que se ASUME, no lo que se AFIRMA.
+- Cierra con "ÍNDICE DE CONFIANZA EPISTÉMICA": evaluación global del corpus (Especulativo → Exploratorio → Sugestivo → Sólido → Robusto) con justificación.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('04')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('04')">Copiar prompt</button>
+            </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="prompt-card">
+            <span class="card-number">05</span>
+            <span class="card-category cat-modelos">Modelos Mentales</span>
+            <h3 class="card-title">Mental Models x Dreyfus</h3>
+            <p class="card-desc">Un epistemologo cognitivo destila los modelos mentales necesarios para PENSAR como alguien del campo — organizados en 5 niveles Dreyfus, de novato a experto.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>3-7 modelos por nivel Dreyfus</li>
+                    <li>Cuando aplicar y cuando falla cada modelo</li>
+                    <li>Modelos implicitos inferidos del corpus</li>
+                    <li>Mapa de evolucion entre niveles</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-05">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-05">Eres un epistemólogo cognitivo. Tu misión: analizar los documentos cargados y destilar los MODELOS MENTALES que una persona necesita para pensar como alguien de este campo — no para memorizar contenido, sino para razonar como un practicante real.
+
+Genera un REPORTE titulado "Modelos Mentales: [nombre del campo]" organizado en 5 niveles Dreyfus. Para cada nivel, identifica entre 3 y 7 modelos mentales (heurísticas, reglas, analogías, o frameworks teóricos) que emerjan directamente de los documentos.
+
+## NIVEL 1 — NOVICE (sigue reglas sin contexto)
+Modelos mentales tipo: reglas simples, recetas, "si X entonces Y", checklist mentales.
+El novato necesita anclas claras para no perderse.
+
+## NIVEL 2 — ADVANCED BEGINNER (reconoce patrones situacionales)
+Modelos mentales tipo: patrones recurrentes, taxonomías básicas, analogías con dominios familiares.
+El aprendiz avanzado empieza a ver que "depende del contexto" pero necesita guía sobre DE QUÉ depende.
+
+## NIVEL 3 — COMPETENT (prioriza y planifica)
+Modelos mentales tipo: árboles de decisión, trade-offs, frameworks de priorización, mapas causa-efecto.
+El competente elige activamente qué es importante y qué ignorar.
+
+## NIVEL 4 — PROFICIENT (percibe la situación completa)
+Modelos mentales tipo: modelos sistémicos, reconocimiento de patrones holísticos, pensamiento en gradientes (no binario).
+El proficiente "ve" la situación completa antes de actuar.
+
+## NIVEL 5 — EXPERT (actúa por intuición informada)
+Modelos mentales tipo: meta-modelos, paradojas productivas, principios generativos que crean nuevos modelos.
+El experto ya no aplica modelos — los genera, los combina, y sabe cuándo romperlos.
+
+---
+
+PARA CADA MODELO MENTAL, incluye EXACTAMENTE estos campos:
+
+🏷️ **Nombre**: nombre corto y memorable del modelo.
+📝 **Descripción**: qué es este modelo en 1-2 oraciones.
+❓ **Problema que resuelve**: qué pregunta o incertidumbre aborda.
+⚙️ **Cómo funciona**: la mecánica — la regla, la analogía, el framework. Explicado para alguien del nivel correspondiente.
+✅ **Cuándo aplicarlo**: situaciones, contextos, o señales que disparan este modelo.
+🚫 **Cuándo falla**: límites, excepciones, y situaciones donde este modelo te lleva a error.
+💡 **Ejemplo**: un caso concreto extraído de los documentos donde este modelo se aplica (o donde falló).
+
+---
+
+REGLAS:
+- Extrae TODO de los documentos cargados. No inventes ni uses conocimiento externo.
+- Los modelos de cada nivel deben ASUMIR dominio de los niveles anteriores.
+- Si un modelo del Nivel 2 contradice o matiza uno del Nivel 1, señálalo explícitamente con ⚠️.
+- Si un modelo aparece implícito (los autores lo usan pero nunca lo nombran), dale un nombre descriptivo y marca con 🔍 que es un modelo inferido.
+- Los modelos del Nivel 5 deben incluir al menos uno que sea META (un modelo sobre cómo elegir entre modelos).
+- Cierra el reporte con una sección "MAPA DE EVOLUCIÓN" que muestre cómo los modelos de niveles inferiores se transforman, fusionan, o se abandonan en niveles superiores.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('05')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('05')">Copiar prompt</button>
+            </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="prompt-card">
+            <span class="card-number">06</span>
+            <span class="card-category cat-competencias">Competencias</span>
+            <h3 class="card-title">Competencias Procedimentales x Dreyfus</h3>
+            <p class="card-desc">Identifica las 10 habilidades practicas mas importantes del campo. Cada una expresada en 5 niveles Dreyfus con microtareas observables, desenlaces y practica deliberada.</p>
+            <div class="card-output">
+                <p class="card-output-label">Genera</p>
+                <ul class="output-list">
+                    <li>10 habilidades core con ficha completa</li>
+                    <li>5 niveles Dreyfus por habilidad</li>
+                    <li>Microtareas observables + practica deliberada</li>
+                    <li>Ruta critica de desarrollo</li>
+                </ul>
+            </div>
+            <div class="prompt-content" id="prompt-06">
+                <div class="prompt-inner">
+                    <div class="prompt-text-block">
+                        <pre class="prompt-text" id="text-06">Eres un experto en diseño curricular y evaluación de competencias. Analiza los documentos cargados e identifica las 10 habilidades prácticas, procedimentales y conductuales más importantes que una persona debe poder REALIZAR (no saber, HACER) para dominar este campo.
+
+Genera un REPORTE titulado "Mapa de Competencias: [nombre del campo]" donde cada habilidad se expresa en 5 niveles de complejidad Dreyfus.
+
+---
+
+PRIMERO: Lista las 10 habilidades core con nombre y descripción de una línea. Estas 10 deben cubrir la mayor parte del contenido de los documentos. Prioriza habilidades que sean:
+- Observables (alguien podría ver si la estás haciendo o no).
+- Progresivas (tienen una versión simple y una versión experta).
+- De alto apalancamiento (sin esta habilidad, no puedes funcionar en el campo).
+
+---
+
+LUEGO: Para CADA una de las 10 habilidades, genera una ficha con esta estructura:
+
+### 🏷️ HABILIDAD [N]: [Nombre]
+📝 **Descripción**: qué es esta habilidad en 1-2 oraciones.
+
+#### NIVEL 1 — NOVICE (sigue reglas)
+- **Tareas**: 3-5 microtareas mínimas, cada una una acción observable y evaluable. Formato: "El aprendiz [verbo de acción] + [objeto] + [criterio observable]."
+- **Desenlace**: si ejecuta bien → qué resultado produce. Si ejecuta mal → qué falla ocurre.
+- **Práctica deliberada**: método de repetición con feedback correctivo. Ejercicios de drill, checklists guiados, imitación de modelos.
+
+#### NIVEL 2 — ADVANCED BEGINNER (reconoce contexto)
+- **Tareas**: 3-5 microtareas que incorporan reconocimiento situacional. El aprendiz ya no solo sigue reglas — identifica CUÁNDO aplicar cada regla.
+- **Desenlace**: resultado correcto vs error típico de este nivel.
+- **Práctica deliberada**: exposición a variaciones del mismo caso, comparación de ejemplos contrastantes, práctica con casos que rompen la regla.
+
+#### NIVEL 3 — COMPETENT (prioriza y planifica)
+- **Tareas**: 3-5 microtareas que requieren toma de decisiones activa. El competente elige QUÉ hacer primero y QUÉ ignorar.
+- **Desenlace**: resultado correcto vs error típico de este nivel.
+- **Práctica deliberada**: resolución de problemas con múltiples caminos válidos, análisis de trade-offs, planning bajo incertidumbre, revisión post-acción.
+
+#### NIVEL 4 — PROFICIENT (percepción holística)
+- **Tareas**: 3-5 microtareas que requieren integración de múltiples señales simultáneas. El proficiente "ve" el patrón completo antes de actuar.
+- **Desenlace**: resultado correcto vs error típico de este nivel.
+- **Práctica deliberada**: análisis de casos complejos, simulación mental (¿qué pasaría si...?), estudio de decisiones de expertos con debriefing, enseñar a niveles inferiores.
+
+#### NIVEL 5 — EXPERT (intuición informada)
+- **Tareas**: 3-5 microtareas que requieren juicio en situaciones ambiguas, novedosas, o con información incompleta. El experto actúa sin reglas explícitas.
+- **Desenlace**: resultado correcto vs error típico de este nivel.
+- **Práctica deliberada**: análisis de errores propios, exposición deliberada a casos atípicos y edge cases, mentoreo inverso (aprender explicando), reflexión metacognitiva sobre el propio proceso de decisión.
+
+---
+
+REGLAS:
+- Extrae TODO de los documentos cargados. No inventes habilidades que el corpus no soporte.
+- Cada microtarea debe ser una ACCIÓN OBSERVABLE con un verbo medible (identifica, clasifica, ejecuta, ajusta, evalúa) — nunca verbos vagos (comprende, aprecia, conoce).
+- Los desenlaces deben ser CONCRETOS: no "mejores resultados" sino qué resultado específico.
+- Las 10 habilidades deben cubrir colectivamente al menos el 80% del contenido de los documentos. Si hay un área grande del corpus sin habilidad asociada, añade una.
+- Si dos habilidades se potencian mutuamente, conéctalas con 🔗.
+- Si una habilidad requiere otra como prerequisito, indícalo con ⬆️ [Habilidad N].
+- Cierra con "RUTA CRÍTICA": el orden sugerido para desarrollar las 10 habilidades, con justificación de por qué ese orden y no otro.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-show" onclick="togglePrompt('06')">Ver prompt</button>
+                <button class="btn-copy" onclick="copyPrompt('06')">Copiar prompt</button>
+            </div>
+        </div>
+
+    </div><!-- /prompt-grid -->
+</div><!-- /grid-container -->
+
+<!-- FOOTER -->
+<footer class="footer">
+    <h2>Estos prompts son parte de<br><span style="color:var(--gold)">El Medico Potenciado</span></h2>
+    <p>La comunidad donde aprendes a usar IA para estudiar, investigar y pensar como clinico. Prompts, workshops, y una comunidad que empuja.</p>
+    <a href="https://www.skool.com/el-medico-potenciado" target="_blank" class="footer-cta">Unirme a la comunidad</a>
+    <p class="footer-sub">Acceso a todos los prompts + actualizaciones + comunidad</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Prompt copiado al portapapeles</div>
+
+<script>
+// Toggle prompt visibility
+function togglePrompt(id) {
+    const el = document.getElementById('prompt-' + id);
+    const btn = el.parentElement.querySelector('.btn-show');
+    if (el.classList.contains('open')) {
+        el.classList.remove('open');
+        btn.classList.remove('active');
+        btn.textContent = 'Ver prompt';
+    } else {
+        el.classList.add('open');
+        btn.classList.add('active');
+        btn.textContent = 'Cerrar';
+    }
+}
+
+// Copy prompt to clipboard
+function copyPrompt(id) {
+    const text = document.getElementById('text-' + id).textContent;
+    const btn = event.currentTarget;
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = 'Copiado!';
+        showToast();
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.textContent = 'Copiar prompt';
+        }, 2000);
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.classList.add('copied');
+        btn.textContent = 'Copiado!';
+        showToast();
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.textContent = 'Copiar prompt';
+        }, 2000);
+    });
+}
+
+// Toast notification
+function showToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+            }, i * 80);
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.prompt-card').forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>
